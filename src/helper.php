@@ -1,8 +1,8 @@
 <?php
-Route::get('static/yyadmin/[:file].[:ext]', "\\yycms\\lib\\File@openfile");
+Route::get('yycms/yyadmin', "\\yycms\\lib\\File@openfile");
 // 格式化文件路径
 function get_file($file=''){
-    return '/static/yyadmin/'.$file;
+    return '/yycms/yyadmin/'.$file;
 }
 /**
  * @param string    $path
