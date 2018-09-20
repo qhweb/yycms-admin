@@ -720,6 +720,7 @@ layui.define(['layer','element','form','table'],function(exports){
                     },
                     complete: function () {
                         _that.config.elem = $container;
+			    layer.closeAll('loading');
                     }
                 });
             } else {
@@ -746,6 +747,7 @@ layui.define(['layer','element','form','table'],function(exports){
                 },
                 complete: function (status) {
                     _that.config.elem = $container;
+			layer.closeAll('loading');
                 }
             });
         }
@@ -1082,7 +1084,7 @@ layui.define(['layer','element','form','table'],function(exports){
   });
   //初始主体结构
   layui.link(
-      layui.cache.base+'skin_default.css?v='+ (YYClass.v + '-1'),function(){
+      layui.cache.base+'skin/default.css?v='+ (YYClass.v + '-1'),function(){
           YYClass.entryPage()
       },'yycmsAdmin'
   );
