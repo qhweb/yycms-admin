@@ -3,8 +3,10 @@
     "description": "YYAdmin1.0",
     "type": "thinkphp51-extension",
     "require": {
-        "zhuojiawei/think5.1-auth": "~1.0",
-        "topthink/thinkphp": "5.1"
+        "php": ">=5.6.0",
+        "topthink/framework": "5.1.*",
+        "topthink/think-image": "^1.0",
+        "topthink/think-captcha": "1.*",
     },
     "license": "mit",
     "authors": [
