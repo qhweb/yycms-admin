@@ -1,7 +1,7 @@
 {
     "name": "qhweb/yycms-admin",
     "description": "YYAdmin1.0",
-    "type": "thinkphp5.1-extension",
+    "type": "thinkphp51-extension",
     "require": {
         "zhuojiawei/think5.1-auth": "~1.0",
         "topthink/thinkphp": "5.1"
