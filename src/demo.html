@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>YYAdmin框架</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="LarryCMS Version:1.09" />
+    <meta name="Author" content="larry" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="layui/css/layui.css" media="all">
+    <link rel="stylesheet" type="text/css" href="http://cdn.yyinfos.com/font/yyicon.css" media="all">
+</head>
+<body class="layui-layout-body">
+	<div class="layui-layout layui-layout-admin">
+	  <div class="layui-header">
+	    <div class="layui-main">
+	      <div class="site-icon-mobile layui-hide-md"><i class="layui-icon">&#xe66b;</i></div>
+	      <div class="layui-logo">YYCMS后台布局</div>
+	      <ul class="layui-nav layui-layout-right">
+	        <li class="layui-nav-item">
+	          <a href="javascript:;">
+	            <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+	            贤心
+	          </a>
+	          <dl class="layui-nav-child">
+	            <dd><a href="">基本资料</a></dd>
+	            <dd><a href="">安全设置</a></dd>
+	            <dd><a href="">退出</a></dd>
+	          </dl>
+	        </li>
+	      </ul>
+	    </div>
+	  </div>
+	  
+	  <div class="layui-side layui-bg-black layui-side-menu">
+	    <div class="layui-side-scroll" id="nav" lay-filter="nav"></div>
+	  </div>
+	  <div class="site-yycms-title layui-breadcrumb" id="YY_HEAD">
+	      <a lay-href="/main">首页</a>
+	      <a><cite>正文</cite></a>
+	  </div>
+	  <div class="layui-body site-yycms-body"  id="YY_BODY"></div>
+	  <div class="layui-footer site-yycms-footer">
+	    © yyinfos.com - 青海云音信息技术有限公司
+	  </div>
+	</div>
+	<div class="site-tree-mobile layui-hide">
+	    <i class="layui-icon">&#xe602;</i>
+	</div>
+	<div class="site-mobile-shade"></div>
+</body>
+<script src="layui/layui.js"></script>
+<script>layui.config({base: '/yycms/',version: '1.0.0'}).use('yycms',function(){
+	var yycms = layui.yycms;
+	var navbar = yycms.navbar({
+        elem: '#nav',
+        url: 'json/menu.json',
+        cached:true
+    });
+});
+</script>
+</html>
