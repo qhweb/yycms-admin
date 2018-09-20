@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <title>后台登录 - YYCMS</title>
-  <link rel="stylesheet" href="<?php echo get_file('layui/css/layui.css')?>" media="all">
+  <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
 </head>
 <body>
   <div class="login-bg">
@@ -19,7 +19,7 @@
         <?php if($errnum >= 3){?>
         <div class="login-con-code">
           <input name="captcha" type="text" placeholder="验证码" autocomplete="off" lay-verify="captcha">
-          <img src="https://www.oschina.net/action/user/captcha"  id="getvercode" class="cursor" />
+          <img src="/captcha/1"  id="getvercode" class="cursor" />
         </div>
         <?php } ?>
         <div style="overflow:hidden;">
@@ -43,7 +43,7 @@
   <div class="login-footer"></div>
 </footer>
 <div class="passport-bg"></div>
-<script src="<?php echo get_file('layui/layui.js')?>"></script>
-<script>layui.config({base: '<?php echo get_file('layui/modules/')?>',version: '1.0.0'}).use('user');</script>
+<script src="/static/layui/layui.js"></script>
+<script>layui.config({base: '/yycms/yyadmin/',version: '1.0.0'}).use('user');</script>
 </body>
 </html>
