@@ -12,7 +12,7 @@ JS:
 ````
 ## 第二步：下载YYAdmin文件并解压
 下载地址：
-https://https://github.com/qhweb/yycms-admin.git(https://https://github.com/qhweb/yycms-admin.git)
+https://https://github.com/qhweb/yycms-admin.git
 ```html
 在页面中引入引入YYAdmin Js框架
 <script>layui.config({base: '/yycms/',version: '1.0.0'}).use('yycms',function(){
@@ -178,7 +178,7 @@ layui.use('yycms',function(){
 ```
 ##### 效果：
 <p align="center">
-<img src="https://cdn.yyinfos.com/r/echarts_demo.jpg" />
+https://cdn.yyinfos.com/r/echarts_demo.jpg
 </p>
 
 ### 3、表单

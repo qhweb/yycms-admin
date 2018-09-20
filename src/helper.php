@@ -1,14 +1,8 @@
 <?php
+Route::get('static/yyadmin/[:file].[:ext]', "\\yycms\\lib\\File@openfile");
 // 格式化文件路径
-function get_file($file){
-    $directory =  \think\Config::get('yycms.style_directory');
-
-    if(empty($directory)){
-        return url('auth/openFile',['file'=>$file]);
-    }else{
-        $file       = strtr($file, '_', DS);
-        return $directory.$file;
-    }
+function get_file($file=''){
+    return '/static/yyadmin/'.$file;
 }
 /**
  * @param string    $path
@@ -16,15 +10,15 @@ function get_file($file){
  * @return bool
  */
 function checkAuthPath($path,$param=[]){
-    $result =  \yycms\auth\Auth::checkPath($path,$param);
+    $result =  \yycms\Admin::checkPath($path,$param);
     return $result;
 }
 function checkPath($path,$param=[]){
-    $result =  \yycms\auth\Auth::checkPath($path,$param);
+    $result =  \yycms\Admin::checkPath($path,$param);
     return $result;
 }
 function access_token($post){
-	$access_token = \yycms\auth\Auth::sessionGet('user_sign');
+	$access_token = \yycms\Admin::sessionGet('user_sign');
 	if($access_token==$post['access_token']){
 		unset($post['access_token']);
 		return $post;

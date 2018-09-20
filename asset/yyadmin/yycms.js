@@ -3,7 +3,7 @@ var config = {
   ,default:{
   	index:'admin/index/main'
   }
-  ,loginurl:'admin/user/login'
+  ,loginurl:'/admin/user/login'
 }
 layui.define(['layer','element','form','table'],function(exports){
 	var $ = layui.$,LAY_BODY ="YY_BODY",layer=layui.layer,form=layui.form,table=layui.table; element=layui.element ;$win=$(window),$body = $('body'),cacheName='YYCMS_DATA',MOD_NAME='yycms';
@@ -157,6 +157,9 @@ layui.define(['layer','element','form','table'],function(exports){
           area: ["580px","300px"],
       },options)) 
     }
+    ,closeDialog:function(index) {
+        return layer.close(index||YYClass.openDialog.index);
+    }
     /**
      * 页面入口
      * @return {[type]}      [description]
@@ -237,7 +240,7 @@ layui.define(['layer','element','form','table'],function(exports){
                    */
                   	YYClass.events.back = function(){
                   		var layer_index = YYClass.openDialog.index;
-                  		console.log(layer_index);
+                  		//console.log(layer_index);
                   		if (layer_index > 0) {
                           parent.layer.close(layer_index);
                       	}else{
@@ -1079,7 +1082,7 @@ layui.define(['layer','element','form','table'],function(exports){
   });
   //初始主体结构
   layui.link(
-      layui.cache.base+'skin/default.css?v='+ (YYClass.v + '-1'),function(){
+      layui.cache.base+'skin_default.css?v='+ (YYClass.v + '-1'),function(){
           YYClass.entryPage()
       },'yycmsAdmin'
   );

@@ -10,31 +10,31 @@
 // +----------------------------------------------------------------------
 namespace yycms;
 
-defined('VIEW_PATH') or define('VIEW_PATH', __DIR__ . DS.'view'. DS);
-
-use think\Cache;
-use think\Config;
-use think\Loader;
-use think\Request;
-use think\Session;
-use yycms\auth\model\ActionLog;
-use yycms\auth\model\AuthAccess;
-use yycms\auth\model\AuthRoleUser;
-use yycms\auth\model\Menu;
+defined('VIEW_PATH') or define('VIEW_PATH', __DIR__ . '/view/');
+use think\facade\Cache;
+use think\facade\Config;
+use think\facade\Loader;
+use think\facade\Session;
+use think\facade\Request;
+// use yycms\model\ActionLog;
+// use yycms\model\AuthAccess;
+// use yycms\model\AuthRoleUser;
+// use yycms\model\Menu;
 
 class Admin
 {
     const  PATH                 = __DIR__;
     public $log                 = true;
     public $noNeedCheckRules    = [];           //不需要检查的路由规则
-	
+
     public function __construct()
     {
-        $this->request      = Request::instance();
-        $this->param        = $this->request->param();
-        $this->module       = $this->request->module();
-        $this->controller   = $this->request->controller();
-        $this->action       = $this->request->action();
+        $this->request      = Request::request();
+        $this->param        = Request::param();
+        $this->module       = Request::module();
+        $this->controller   = Request::controller();
+        $this->action       = Request::action();
+        defined('SITEID') or define('SITEID',1);
     }
 
     /**
@@ -45,10 +45,10 @@ class Admin
      */
     public function autoload($name){
 
-		$this->controller = strtolower($this->controller) == 'auth' ? 'Rbac' : $this->controller;
-		$class = '\\yycms\\auth\\controller\\'.$this->controller;
+		$class = '\\yycms\\controller\\'.$this->controller;
+        $errclass = '\\yycms\\controller\\Error';
 		if(class_exists($class)){
-			$controller = new $class($this->request);
+			$controller = new $class(Request(),$this->controller);
 			$yyname = 'yycms_'.$name;
             if(method_exists($controller,$yyname)){
                 return  call_user_func([$controller, $yyname]);
@@ -57,9 +57,19 @@ class Admin
 	        }else{
                 return abort(404,'控制器方法不存在');
             }
+		}else if (class_exists($errclass)) {
+            $controller = new $errclass(Request(),'Error');
+			$yyname = 'yycms_'.$name;
+            if(method_exists($controller,$yyname)){
+                return  call_user_func([$controller, $yyname]);
+            }else if(method_exists($controller,$name)){
+                return  call_user_func([$controller, $name],$this->param);
+            }else{
+                return abort(404,'控制器方法不存在');
+            }
 		}else{
-			return abort(404,'控制器不存在');
-		}
+            return abort(404,'控制器不存在');
+        }
        	return false;
     }
 
@@ -188,15 +198,15 @@ class Admin
         @(eval('$condition= (string)("' . $command . '");'));
         //dump($condition);die;
         $data   = [
-            'action_ip'     => ip2long($this->request->ip()),
+            'action_ip'     => ip2long(Request::ip()),
             'username'      => self::sessionGet('user.nickname'),
             'create_time'   => time(),
-            'log_url'       => '/'.$this->request->pathinfo(),
+            'log_url'       => '/'.Request::pathinfo(),
             'log'           => $condition,
             'user_id'       => $uid,
             'title'         => $title
         ];
-        return ActionLog::create($data);
+        return \yycms\model\ActionLog::create($data);
     }
 
     /**
