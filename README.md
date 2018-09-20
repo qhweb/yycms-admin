@@ -1,8 +1,8 @@
-#使用说明：
+# 使用说明：
 YYAdmin For Layui 是一款采用Layui前端UI框架，遵循原生HTML/CSS/JS的书写与组织形式，门槛极低，拿来即用。其外在极简，却又不失饱满的内在，体积轻盈，组件丰盈，从核心代码到API的每一处细节都经过精心雕琢，非常适合界面的快速开发。YYAdmin 
 首个版本发布于2018年金秋，她更多是为服务端程序员量身定做，你无需涉足各种前端工具的复杂配置，只需面对浏览器本身，让一切你所需要的元素与交互，从这里信手拈来。
-##第一步：引入文件
-```
+## 第一步：引入文件
+```html
 CSS:
 <link rel="stylesheet" type="text/css" href="https://cdn.yyinfos.com/font/yyicon.css" media="all">//YYAdmin专用图表库
 <link rel="stylesheet" type="text/css" href="https://cdn.yyinfos.com/layui/css/layui.css" media="all">
@@ -10,10 +10,10 @@ JS:
 <script src="https://cdn.yyinfos.com/layui/layui.js"></script>
 
 ````
-##第二步：下载YYAdmin文件并解压
+## 第二步：下载YYAdmin文件并解压
 下载地址：
-https://
-```
+https://https://github.com/qhweb/yycms-admin.git(https://https://github.com/qhweb/yycms-admin.git)
+```html
 在页面中引入引入YYAdmin Js框架
 <script>layui.config({base: '/yycms/',version: '1.0.0'}).use('yycms',function(){
 	var yycms = layui.yycms;
@@ -27,8 +27,8 @@ https://
 </script>
 
 ```
-##首页代码
-```
+## 首页代码
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -99,10 +99,10 @@ https://
 </script>
 </html>
 ```
-#框架函数说明
-###1、数据表格
+# 框架函数说明
+### 1、数据表格
 数据表格使用设置包括config、table、toobar3个元素,使用前需要引入yycms模块
-```
+```html
 layui.use('yycms',function(){
     var yycms=layui.yycms;
     var tableins = yycms.table({
@@ -137,13 +137,13 @@ layui.use('yycms',function(){
     });
 });
 ```
-###2、Charts图表
-#####函数：yycms.charts({参数1，参数2})
+### 2、Charts图表
+##### 函数：yycms.charts({参数1，参数2})
 参数1：图表显示的容器，必须是ID元素；
 参数2：json对象，charts数据选项设置，**此处参照百度echarts APi文档**
 
-#####代码示例：
-```
+##### 代码示例：
+```html
 layui.use('yycms',function(){
     var yycms=layui.yycms;
     yycms.charts({
@@ -176,14 +176,14 @@ layui.use('yycms',function(){
     });
 });
 ```
-#####效果：
+##### 效果：
 <p align="center">
 <img src="https://cdn.yyinfos.com/r/echarts_demo.jpg" />
 </p>
 
-###3、表单
+### 3、表单
 ##### 代码示例：
-```
+```html
 <form class="layui-form" action="json/edit.json" lay-filter="example">
     <div class="layui-form-item">
         <label class="layui-form-label">输入框</label>
@@ -254,7 +254,7 @@ layui.use('yycms',function(){
 -->
 ```
 ##### 数据初始化：
-```
+```html
 <script>
     var FormVal = {};//你的表单初始化数据
     这里有个坑，raido的数据格式必须是字符串格式，例如 ：正确格式：{"status":"1"},错误格式：{"status":1}
