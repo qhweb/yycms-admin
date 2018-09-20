@@ -14,7 +14,7 @@
             "email": "qhweb@foxmail.com"
         }
     ],
-    "minimum-stability": "5.1.0",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "yycms\\": "src"
