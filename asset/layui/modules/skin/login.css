@@ -1,0 +1,38 @@
+html #layuicss-login{display: none; position: absolute; width: 1989px;}
+/* 全局 */
+html,body{height:100%;}
+*[template]{display: none;}
+*[lay-href],
+*[lay-tips],
+*[yycmsadmin-event]{cursor: pointer;}
+
+ /*登陆找回密码*/
+.passport-bg {background: url('res/login_bg.jpg') 50% 50% no-repeat #2f4158;background-size: cover;position: absolute;width: 100%;height: 100%;left: 0;top: 0;z-index: -1;}
+.login-bg{width:420px; min-height:330px; left:50%; top:50%; position:absolute; margin-top:-215px; margin-left:-210px; background:#fafafa; border-radius:5px; overflow:hidden;}
+.login-bg-mini{height: 350px;margin-top:-175px;}
+.reg{height:530px;margin-top:-265px; }
+.login-header{background:#30b3eb; height:74px; text-align:center; color:#fafafa; font-size:25px; padding-top:18px; box-sizing:border-box;}
+.login-con{padding:50px; box-sizing:border-box;}
+.login-con input[type=text], .login-con input[type=password]{width:100%; margin-bottom:18px; border:1px solid #f0f0f0; padding:10px 8px; padding-left:40px; box-sizing:border-box; background:#fff;}
+.login-con input[type=text]{background:url(res/user.png) 10px 12px no-repeat #fff;}
+.login-con .login_password[type=password]{background:url(res/password_bg.png) 10px 12px no-repeat #fff;}
+.login-con .text-email[type=text]{background:url(res/email_bg.png) 10px 10px no-repeat #fff;}
+.login-con-code input[type=text]:first-child{width:50%;background:url(res/code_bg.png) 10px 11px no-repeat #fff; margin-right:10px;text-transform:uppercase; }
+.ect-btn-login{width:100%; background:#30b3eb; color:#FFF; font-size:16px !important; margin-top:15px;}
+.ect-btn-login:hover{background:#25a5dc !important; color:#fff !important;}
+.login-footer{font-size:12px; color:#FFF; position:fixed; bottom:10px; width:100%; text-align:center; margin:0 auto;}
+.get_password .btn{width:47%; margin-top:15px; padding:10px 0; font-size:16px !important;}
+.get_password  .btn-danger{background:#30b3eb !important; border:#30b3eb;}
+.get_password  .btn-danger:hover{background:#25a5dc !important;}
+.pull-left{float: left;}
+.pull-right{float: right;}
+.cursor{cursor: pointer;}
+a{color: #0066CC;}
+.backicon{font-size: 30px;color:#fff;position: absolute;z-index: 1000;visibility: hidden;}
+@media screen and (max-width: 768px) {
+	.backicon{visibility: visible;top:10px;left:15px;}
+	.login-header{height:50px;padding-top: 9px;}
+  .login-bg{top:0;bottom:0;margin-top:0;height: 100%;}
+  .login-bg-mini,.reg{height: 100%;}
+  .passport-bg{background: transparent;}
+}
