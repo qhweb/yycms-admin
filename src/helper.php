@@ -1,8 +1,10 @@
 <?php
-Route::get('yycms/yyadmin', "\\yycms\\lib\\File@openfile");
+Route::get('static/yyadmin', "\\yycms\\lib\\File@openfile");
+defined('VIEW_PATH') or define('VIEW_PATH', __DIR__ . '/view/');
+defined('YYCMS_STATIC') or define('YYCMS_STATIC', __DIR__ . '/../asset');
 // 格式化文件路径
 function get_file($file=''){
-    return '/yycms/yyadmin/'.$file;
+    return '/static/yyadmin/'.$file;
 }
 /**
  * @param string    $path
@@ -98,5 +100,21 @@ function getLevelTree($arr,$level=0){
         }
     }
     return $res;
+}
+function yycms_string2array($info) {
+    if($info == '') return array();
+    eval("\$r = $info;");
+    return $r;
+}
+function yycms_array2string($info) {
+    if($info == '') return '';
+    if(!is_array($info)){
+        $string = stripslashes($info);
+    }
+    foreach($info as $key => $val){
+        $string[$key] = stripslashes($val);
+    }
+    $setup = var_export($string, TRUE);
+    return $setup;
 }
 ?>

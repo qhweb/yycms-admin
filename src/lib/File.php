@@ -1,12 +1,12 @@
 <?php
 // +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
+// | 版权所有： 2017~2018 青海云音信息技术有限公司 [ http://www.yyinfos.com ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2015 http://thinkphp.cn All rights reserved.
+// | 官方网站: http://yyadmin.yyinfos.com
 // +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// | 开源协议： ( https://mit-license.org )
 // +----------------------------------------------------------------------
-// | Author: yunwuxin <448901948@qq.com>
+// | 作者：独角戏（120229231@qq.com）
 // +----------------------------------------------------------------------
 
 namespace yycms\lib;
@@ -18,11 +18,13 @@ class File
 	/**
      * 注册样式文件
      */
-    public function openfile($file = "",$ext = "")
+    public function openfile()
     {
 
         $text       = '';
-        $file       = strtr($file, '_', '/');
+        $file       = str_replace('static','',request()->path());
+        $ext  = substr(strrchr($file, '.'), 1);
+//        exit($file);
         switch ($ext)
         {
             case 'css':
@@ -31,13 +33,23 @@ class File
             case 'js':
                 $text = 'text/js';
                 break;
+            case 'tpl':
+                $text = 'text/html';
+                break;
+            case 'jpg':
+                $text = 'image/jpg';
+                break;
+            case 'png':
+                $text = 'image/png';
+                break;
+            case 'gif':
+                $text = 'image/gif';
+                break;
             default:
                 return abort(404,'文件类型不支持');
         }
-
-        $pach = __DIR__ .  '/../../asset/yyadmin/'.$file .'.' . $ext;
-        // print_r($pach);
-        // exit;
+        $pach = YYCMS_STATIC. $file;
+//        print_r($pach);exit;
         if (file_exists($pach)) {
         	$filecontent = file_get_contents($pach);
 	        //正则url标签

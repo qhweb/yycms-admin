@@ -10,7 +10,6 @@
 // +----------------------------------------------------------------------
 namespace yycms;
 
-defined('VIEW_PATH') or define('VIEW_PATH', __DIR__ . '/view/');
 use think\facade\Cache;
 use think\facade\Config;
 use think\facade\Loader;
@@ -29,11 +28,11 @@ class Admin
 
     public function __construct()
     {
-        $this->request      = Request::request();
-        $this->param        = Request::param();
-        $this->module       = Request::module();
-        $this->controller   = Request::controller();
-        $this->action       = Request::action();
+        $this->request      = request();
+        $this->param        = $this->request->param();
+        $this->module       = $this->request->module();
+        $this->controller   = $this->request->controller();
+        $this->action       = $this->request->action();
         defined('SITEID') or define('SITEID',1);
     }
 
@@ -47,8 +46,9 @@ class Admin
 
 		$class = '\\yycms\\controller\\'.$this->controller;
         $errclass = '\\yycms\\controller\\Error';
+
 		if(class_exists($class)){
-			$controller = new $class(Request(),$this->controller);
+			$controller = new $class($this->request,$this->controller);
 			$yyname = 'yycms_'.$name;
             if(method_exists($controller,$yyname)){
                 return  call_user_func([$controller, $yyname]);
@@ -58,7 +58,7 @@ class Admin
                 return abort(404,'控制器方法不存在');
             }
 		}else if (class_exists($errclass)) {
-            $controller = new $errclass(Request(),'Error');
+            $controller = new $errclass($this->request,'Error');
 			$yyname = 'yycms_'.$name;
             if(method_exists($controller,$yyname)){
                 return  call_user_func([$controller, $yyname]);
@@ -198,10 +198,10 @@ class Admin
         @(eval('$condition= (string)("' . $command . '");'));
         //dump($condition);die;
         $data   = [
-            'action_ip'     => ip2long(Request::ip()),
+            'action_ip'     => ip2long($this->request->ip()),
             'username'      => self::sessionGet('user.nickname'),
             'create_time'   => time(),
-            'log_url'       => '/'.Request::pathinfo(),
+            'log_url'       => '/'.$this->request->pathinfo(),
             'log'           => $condition,
             'user_id'       => $uid,
             'title'         => $title
@@ -231,7 +231,7 @@ class Admin
 
         $count      = count(explode('/',$path));
         if($count == 2){
-            $module = Request::instance()->module();
+            $module = $this->request->instance()->module();
             $path   = "$module/$path";
         }
 

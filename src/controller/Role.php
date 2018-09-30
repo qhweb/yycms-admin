@@ -1,215 +1,161 @@
-<?php 
+<?php
+// +----------------------------------------------------------------------
+// | 版权所有： 2017~2018 青海云音信息技术有限公司 [ http://www.yyinfos.com ]
+// +----------------------------------------------------------------------
+// | 官方网站: http://yyadmin.yyinfos.com
+// +----------------------------------------------------------------------
+// | 开源协议： ( https://mit-license.org )
+// +----------------------------------------------------------------------
+// | 作者：独角戏（120229231@qq.com）
+// +----------------------------------------------------------------------
 namespace yycms\controller;
 
-
-use think\facade\Cache;
-use think\facade\Config;
-use think\Validate;
-use yycms\Admin;
-use yycms\model\AuthRole;
-use yycms\model\Menu;
-use yycms\lib\Tree;
-use yycms\model\AdminUser;
-/**
-* 角色管理
-*/
-class Role
+class Role extends YYAdmin
 {
-    private $id;
-    public $auth;
-    
     public function __construct($request,$controller)
     {
-        $this->request      = $request;
-        $this->param        = $this->request->param();
-        $this->post         = $this->request->post();
-        $this->controller   = $controller;
-        $this->action       = $this->request->action();
-        $this->id           = isset($this->param['id'])?intval($this->param['id']):'';
-        $this->data         = ['pach'=>VIEW_PATH,'siteid'=>SITEID,'version'=>config('yycms.version'),'wait'=>3];
-        $this->auth         = new \yycms\Admin();
-        $this->tpl          = VIEW_PATH.$this->controller.'/'.$this->action . '.php';
-        
+        parent::__construct($request,$controller);
+        $this->model = new \yycms\model\AuthRole();
+        $this->rule = [
+            'name'  => 'require',
+        ];
+        $this->rulemsg = [
+            'name.require' => '角色名称必须填写',
+        ];
     }
 	/**
      * 角色列表
      */
     public function yycms_index(){
-    	if ($this->request->isPost()) {
-    		$post   = $this->post;
-	        $key = isset($post['key']) ? trim($post['key']) : '';
-	        $map =[];
-	        $limit = isset($post['limit']) ? $post['limit'] : 15;
-	        if (!empty($key)) {
-	            $map['name'] = array('like', '%'.$key.'%');
-	        }
-	        $data = AuthRole::where($map)->limit($limit)->select();
-	        $count = AuthRole::where($map)->count();
-	        return ['code'=>0,'msg'=>'获取成功','data'=>$data,'count'=>$count];
-    	}
-        return [$this->tpl,[]];
+        if($this->isPost){
+            $limit = $this->post['limit']?:15;
+            $key = isset($post['key']) ? trim($post['key']) : '';
+            $map = array();
+            if (!empty($key)) {
+                $map['name'] = array('like', '%'.$key.'%');
+            }
+            $result = $this->model->where($map)->paginate($limit)->toArray();
+            return $this->yycms_reponse($result['data'],$result['total']);
+        }
+        return $this->yycms_display();
     }
+
+    /**
+     * 角色选择select数据
+     * @param string $roleid
+     * @return string
+     */
     private static function yycms_roleSelect($roleid = ''){
         $roleid = explode(',',$roleid);
-
-        $role = AuthRole::column('name','id');
+        $role = $this->model->column('name','id');
         $html = '';
         foreach($role as $k=>$v){
-            $selected = in_array($k, $roleid)?'selected':'';
-
+            $selected = in_array($k, $roleid) ? 'selected':'';
             $html   .= ' <option '.$selected.' value="'.$k.'">'.$v.'</option>';
         }
-
         return $html;
     }
     
     /**
      * 角色修改
      */
-    public function yycms_roleedit()
-    {
-    	$info   = AuthRole::get($this->id);
-        if(empty($info)){
-            return false;
+    public function yycms_edit(){
+        if($this->isPost){
+            $this->post['status'] = isset($this->post['status']) && $this->post['status'] =='on' ? 1 : 0;
+            return $this->yycms_editData();
+        }else{
+            $info = $this->model->get($this->id);
+            $this->data['title'] = '角色修改';
+            $this->data['info'] = $info;
+            return $this->yycms_display();
         }
-        //post 数据处理
-        if($this->request->isPost()){
-        	$post   = $this->post;
-            if (isset($post['status']) && $post['status'] == 'on') {
-                $post['status'] = 1;
-            }
-			if (!$post = access_token($post)) {
-                return ['code'=>1002,'msg'=>'access_token匹配不成功，操作失败'];
-            }
-            
-            $validate = new Validate($this->roleValidate);
-            if (!$validate->check($post)) {
-                return ['code'=>0,'msg'=>$validate->getError()];
-            }
-
-            if($info->allowField(true)->isUpdate(true)->save($post)){
-                return ['code'=>1,'msg'=>'修改成功'];
-            }else{
-                return ['code'=>0,'msg'=>'修改失败'];
-            }
-        }
-        
-    	
-        return [VIEW_PATH.'role/roleForm.php',array_merge($this->data,['info'=>$info])];
     }
-
     /**
      * 角色增加
      */
-    public function yycms_roleadd()
-    {
-
-        //post 数据处理
-        if($this->request->isPost()){
-            $post   = $this->post;
-			$post['status'] = isset($post['status']) ? 1 : 0;
-
-			if (!$post = access_token($post)) {
-                return ['code'=>0,'msg'=>'access_token匹配不成功，操作失败'];
-            }
-            
-            //现在数据
-            $validate = new Validate($this->roleValidate);
-            if (!$validate->check($post)) {
-                return ['code'=>0,'msg'=>$validate->getError()];
-            }
-
-            if(AuthRole::create($post)){
-                return ['code'=>1,'msg'=>'增加成功','url'=>url('auth/role')];
-            }else{
-                return ['code'=>0,'msg'=>'增加失败'];
-            }
+    public function yycms_add(){
+        if($this->isPost){
+            $this->post['status'] = isset($this->post['status']) && $this->post['status'] =='on' ? 1 : 0;
+            return $this->yycms_addData();
+        }else{
+            return $this->yycms_display();
         }
-        return [VIEW_PATH.'role/roleForm.php',$this->data];
     }
 
-    public function yycms_roleDelete()
+    /**
+     * 角色删除
+     * @return array
+     */
+    public function yycms_del()
     {
-        if($this->request->isPost()){
-            $result   = AuthRole::get($this->id);
-
-            if (!$post = access_token($post)) {
-                return ['code'=>0,'msg'=>'access_token匹配不成功，操作失败'];
+        if($this->isPost){
+            $this->id = $this->ids;
+            if (!$post = access_token($this->post)) {
+                $this->result('token匹配不成功，操作失败',1002);
             }
-
-            if($this->id==1){
-                return ['code'=>0,'msg'=>'超级管理员不可删除'];
-            }else if(empty($result)){
-                return ['code'=>0,'msg'=>'没有数据'];
-            }
-            $delete = $result->authRoleDelete();
-            if(is_string($delete)){
-                return ['code'=>0,'msg'=>$delete];
-            }else if($delete === true){
-                return ['code'=>1,'msg'=>'删除成功','url'=>url('auth/role')];
+            if($this->ids==1){
+                $this->error('超级管理员不可删除');
             }else{
-                return ['code'=>0,'msg'=>'删除失败'];
+                //关联模型删除together
+                $role = $this->model->get($this->ids);
+                $delete = $role->authRoleDelete();
+                if(is_string($delete)){
+                    $this->error($delete);
+                }else if($delete === true){
+                    $this->success('删除成功');
+                }else{
+                    $this->error(删除失败);
+                    return ['code'=>0,'msg'=>'删除失败'];
+                }
             }
         }
-        return ['code'=>0,'msg'=>'请求方式错误'];
     }
     /**
      * 角色授权
      */
     public function yycms_authorize()
-    { 
+    {
         //表单处理
-        if($this->request->isPost()){
-            
+        if($this->isPost){
             $post   = $this->post;
+            $role = $this->model->find($post['id']);
             $menuid = isset($post['rules']) ? $post['rules'] : [];
-
             if (!$post = access_token($post)) {
-                return ['code'=>0,'msg'=>'access_token匹配不成功，操作失败'];
+                $this->result('token匹配不成功，操作失败',1002);
             }
-
             if(empty($this->id)){
-                return ['code'=>0,'msg'=>'需要授权的角色不存在'];
+                $this->error('需要授权的角色不存在');
             }
-
-            AuthAccess::where(["role_id" => $this->id,'type'=>'admin_url'])->delete();
-
+            //先删除授权信息
+            $role->authAccess()->where(['type'=>'admin_url'])->delete();
             if ($menuid) {
                 $data=[];
-                $menuData       = Menu::where('id','IN',$menuid)->order(["list_order" => "asc",'id'=>'asc'])->column('*','id');
+                $menuData       = \yycms\model\Menu::where('id','IN',$menuid)->order(["list_order" => "asc",'id'=>'asc'])->column('*','id');
                 foreach ($menuData as $v) {
                     $name   = strtolower("{$v['app']}/{$v['model']}/{$v['action']}");
                     $data[]   = [
-                        "role_id"   => $this->id,
+                        "role_id"   => $post['id'],
                         "rule_name" => $name,
                         'type'      => 'admin_url',
                         'menu_id'   => $v['id']
                     ];
                 }
                 if($data){
-                    $AuthAccess = new AuthAccess();
-                    if($AuthAccess->saveAll($data)){
-                        return ['code'=>1,'msg'=>'增加成功','url'=>url('auth/role')];
+                    if($role->authAccess()->saveAll($data)){
+                        $this->success('角色授权成功');
                     }else{
-                        return ['code'=>0,'msg'=>'增加失败'];
+                        $this->error('角色授权失败');
                     }
                 }
-
             }else{
-                AuthAccess::where(["role_id" => $this->id,'type'=>'admin_url'])->delete();
-                return ['code'=>1,'msg'=>'没有接收到数据，执行清除授权成功！'];
+                $this->success('没有接收到数据，执行清除授权成功！');
             }
         }//表单处理结束
-
-        if(empty($this->id)){
-            return ['code'=>0,'msg'=>'删除错误！'];
-        }
-        
-        $priv_data  =  AuthAccess::where(['role_id'=>$this->id,'type'=>'admin_url'])->column('menu_id');
-        
-        $info = ['id'=>$this->id,'rules'=>implode(',', $priv_data)];  
-            
-        return [VIEW_PATH.'admin/authorize.php',array_merge($this->data,['info'=>$info])];
+        $role = $this->model->get($this->id);
+        $priv_data  =  $role->authAccess()->where(['type'=>'admin_url'])->column('menu_id');
+        $info = ['id'=>$this->id,'rules'=>implode(',', $priv_data)];
+        $this->data['info'] = $info;
+        return $this->yycms_display();
     }
    
 }
